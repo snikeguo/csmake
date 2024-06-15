@@ -1,0 +1,23 @@
+﻿<Window x:Class="WpfFrontEnd.Designer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfFrontEnd.Designer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="285*"/>
+            <RowDefinition Height="149*"/>
+        </Grid.RowDefinitions>
+        <TreeView x:Name="KconfigTreeView">
+
+        </TreeView>
+        <TextBlock HorizontalAlignment="Left" Margin="46,25,0,0" Grid.Row="1" TextWrapping="Wrap" Text="{Binding SelectedItem, ElementName=KconfigTreeView, Mode=OneWay}" VerticalAlignment="Top" Width="111" Height="35" Background="#FFE8CCCC"/>
+        <ComboBox HorizontalAlignment="Left" Margin="218,37,0,0" Grid.Row="1" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="216,8,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="464,42,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" LostFocus="TextBox_LostFocus"/>
+
+    </Grid>
+</Window>

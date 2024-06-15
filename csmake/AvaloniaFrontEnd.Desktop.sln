@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "csmake", "csmake.csproj", "{9DB424A7-F6D8-4B83-AC4A-25F3282D0CDF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9DB424A7-F6D8-4B83-AC4A-25F3282D0CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DB424A7-F6D8-4B83-AC4A-25F3282D0CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DB424A7-F6D8-4B83-AC4A-25F3282D0CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DB424A7-F6D8-4B83-AC4A-25F3282D0CDF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {276736EF-3458-4341-88CF-6712D215A66B}
+	EndGlobalSection
+EndGlobal

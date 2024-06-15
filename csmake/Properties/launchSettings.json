@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "csmake": {
+      "commandName": "Project",
+      "commandLineArgs": "CsConfig -d CsConfigDescription.cs -u 33.json"
+    }
+  }
+}
