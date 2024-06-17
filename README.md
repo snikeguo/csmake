@@ -1,5 +1,7 @@
 # 使用C#做脚本代替KConfig、makefile,持续开发中,估计会烂尾.原型验证是可以的。
 ![](./doc/index.jpg)
+
+
 编译:
 1.VS2022安装Avalonia for VS2022 扩展。
 2.编译csmake仓库
