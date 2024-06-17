@@ -36,6 +36,8 @@ public class DemoMainMenu : IMenu
 如图所示.
 ![](./doc/sample.jpg)
 
+
+
 经过大脑的运算，这个等价于kconfig,可以将kconfig转成cs脚本。
 
 接下来做的事：
