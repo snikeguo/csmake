@@ -31,7 +31,7 @@ namespace AvaloniaFrontEnd.DataTemplates
             {
                 key = "Choice";
             }
-            else if (menuNode.Source is CSConfig.Menu)
+            else if (menuNode.Source is CSConfig.IMenu)
             {
                 key = "Menu";
             }
@@ -52,7 +52,7 @@ namespace AvaloniaFrontEnd.DataTemplates
             {
                 key = "Choice";
             }
-            else if (menuNode.Source is CSConfig.Menu)
+            else if (menuNode.Source is CSConfig.IMenu)
             {
                 key = "Menu";
             }

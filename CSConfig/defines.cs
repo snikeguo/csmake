@@ -8,7 +8,8 @@ namespace CSConfig
         Tristate,//y/n/m
         String,
         Int,
-        Hex,
+        UInt,
+        Double,
     }
     public enum Tristate
     {
@@ -17,15 +18,19 @@ namespace CSConfig
         M,
     }
 
+
     public interface IItem
     {
-        
-        string Help { get; set; }
-        string Name { get; set; }
 
-        public List<Config> Depends { get; set; }//kconfig 遗留项
-        public List<Config> Select { get; set; }
-        public Config EnableControl { get; set; }
+        string Help  => null;
+
+        string Name => null;
+
+        public List<Config> Depends => null;//kconfig 遗留项
+        public List<Config> Select => null;
+        public Config EnableControl => null;
+
+
     }
 
     public class Config: IItem
@@ -33,8 +38,7 @@ namespace CSConfig
         [JsonIgnore]
         public ConfigType ConfigType { get; set; }
         public object Value { get;set; }
-        [JsonIgnore]
-        public object DefalutValue { get;set; }
+        public bool IsHexShow { get; set; }
         [JsonIgnore]
         public string Help { get; set; }
         //[JsonIgnore]
@@ -59,8 +63,7 @@ namespace CSConfig
         public List<Config> Configs { get; set; }
 
         public Config SelectedConfig { get; set; }
-        [JsonIgnore]
-        public Config DefalutConfig { get; set; }
+
         [JsonIgnore]
         public string Help { get; set; }
         //[JsonIgnore]
@@ -77,22 +80,13 @@ namespace CSConfig
         }
     }
 
-    public class Menu : IItem
+    public interface IMenu : IItem
     {
-        [JsonIgnore]
-        public string Help { get; set; }
-        //[JsonIgnore]
-        public string Name { get; set; }
-        [JsonIgnore]
-        public List<Config> Depends { get; set; }
-        [JsonIgnore]
-        public List<Config> Select { get; set; }
-        [JsonIgnore]
-        public Config EnableControl { get; set; }
-        public override string ToString()
+        public string ToString()
         {
             return Name;
         }
+        public void ItemValueChanged(IItem item);
     }
 
     [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]

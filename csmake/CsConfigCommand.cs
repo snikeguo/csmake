@@ -46,7 +46,7 @@ namespace csmake
                 var content = File.ReadAllText(CsConfigDescriptionFile);
                 CSScript.EvaluatorConfig.Engine = EvaluatorEngine.Roslyn;
                 var eva = CSScript.Evaluator;
-                var csConfigAssembly = typeof(Menu).Assembly;
+                var csConfigAssembly = typeof(IItem).Assembly;
                 CSScript.RoslynEvaluator.ReferenceAssembly(csConfigAssembly);
                 CSScript.RoslynEvaluator.ReferenceDomainAssemblies();
                 CsScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script });

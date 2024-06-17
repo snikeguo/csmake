@@ -1,0 +1,30 @@
+{
+  "Name": "MyMainMenu",
+  "MainMenuConfig": {
+    "Value": "vscode2",
+    "IsHexShow": false,
+    "Name": "XXX1"
+  },
+  "menu1": {
+    "Name": "menu1",
+    "Help": "menu1 help",
+    "Menu1Config": {
+      "Value": 3,
+      "IsHexShow": true,
+      "Name": "Ram Menu1Config"
+    },
+    "Menu1StringConfig": {
+      "Value": "vscode2",
+      "IsHexShow": false,
+      "Name": "chipname"
+    },
+    "Menu1Choice": {
+      "SelectedConfig": {
+        "Value": false,
+        "IsHexShow": false,
+        "Name": "Tc397"
+      },
+      "Name": "选择开发板"
+    }
+  }
+}
