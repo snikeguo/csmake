@@ -6,12 +6,14 @@
         xmlns:views="clr-namespace:AvaloniaFrontEnd.Views"
         mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
         x:Class="AvaloniaFrontEnd.Views.MainWindow"
-		xmlns:dataTemplates="using:AvaloniaFrontEnd.DataTemplates"
         Icon="/Assets/avalonia-logo.ico"
 		WindowStartupLocation="CenterScreen"
 		Width="400"
-		Height="600"
+		Height="700"
 		Loaded="Window_Loaded"
+		 xmlns:pgc="clr-namespace:Avalonia.PropertyGrid.Controls;assembly=Avalonia.PropertyGrid"
+         xmlns:apv="clr-namespace:Avalonia.PropertyGrid.ViewModels;assembly=Avalonia.PropertyGrid"
+		 xmlns:ll="clr-namespace:Avalonia.PropertyGrid.Localization;assembly=Avalonia.PropertyGrid"
         Title="AvaloniaFrontEnd">
 	<Window.Resources>
 
@@ -19,68 +21,16 @@
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="285*"/>
-			<RowDefinition Height="150"/>
 			<RowDefinition Height="100"/>
 		</Grid.RowDefinitions>
-		<TreeView x:Name="KconfigTreeView" Grid.Row="0" SelectionChanged="KconfigTreeView_SelectionChanged">
-			<!--
-			<TreeView.DataTemplates>
-				<dataTemplates:ItemTemplateSelector>
-					<DataTemplate x:Key="Config" DataType="vm:ItemType">
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="{Binding Name,StringFormat=' {0}: '}" />
-							<TextBox Text="{Binding Value}"/>
-						</StackPanel>
-					</DataTemplate>
+		
+		<ScrollViewer Grid.Row="0">
+			<pgc:PropertyGrid
+				x:Name="ConfigPropertyGrid">
+			</pgc:PropertyGrid>
+		</ScrollViewer>
 
-					<DataTemplate x:Key="Choice" DataType="vm:ItemType">
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="{Binding Name,StringFormat=' {0}: '}" />
-							<ComboBox ItemsSource="{Binding Configs}" SelectedItem="{Binding DefalutConfig}"/>
-						</StackPanel>
-					</DataTemplate>
-
-				</dataTemplates:ItemTemplateSelector>
-			</TreeView.DataTemplates>
-			-->
-			<TreeView.ItemTemplate>
-				<TreeDataTemplate ItemsSource="{Binding Items}">
-					<TextBlock Text="{Binding Header}"/>
-				</TreeDataTemplate>
-			</TreeView.ItemTemplate>
-			
-		</TreeView>
-		<Canvas Grid.Row="1" >
-			<TextBlock x:Name="HelpTextBlock"
-				   HorizontalAlignment="Left"
-				   Width="330"
-					Height="80"
-				   TextWrapping="NoWrap"
-				   VerticalAlignment="Top"
-					Background="#FFE8CCCC"
-					Margin="20,50,20,20"
-				   />
-			<ComboBox x:Name="SelectedItemComboBox"   
-					  Width="150" Margin="20,10,20,20" 
-				HorizontalAlignment="Left"  
-				Grid.Row="1" VerticalAlignment="Top"
-					  LostFocus="SelectedItemComboBox_LostFocus"
-				>
-				
-				
-			</ComboBox>
-
-			<TextBox x:Name="SelectedItemTextBox"
-					 Width="150"
-					 Margin="200,10,20,20"
-					 HorizontalAlignment="Left"
-					 Grid.Row="1"
-					 TextWrapping="NoWrap"
-					 VerticalAlignment="Top"
-					 LostFocus="SelectedItemTextBox_LostFocus"
-					 />
-		</Canvas>
-		<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Row="2">
+		<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Row="1">
 			<Button x:Name="SaveConfigButton" Content="SaveConfig" Click="SaveConfigButton_Click"/>
 		</StackPanel>
 	</Grid>

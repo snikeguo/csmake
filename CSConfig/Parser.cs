@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace CSConfig
 {
+#if false
     public static class Parser
     {
         public static void ConfigParsing(Assembly CsConfigAssembly, IMenu descriptionMenu,IMenu userConfigMenu, Assembly UserScriptDescriptionAssembly)
@@ -180,4 +181,5 @@ namespace CSConfig
         }
 #endif
     }
+#endif
 }

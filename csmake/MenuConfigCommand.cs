@@ -2,7 +2,7 @@
 using Avalonia.ReactiveUI;
 using AvaloniaFrontEnd;
 using CommandLine;
-using CSConfig;
+using CsConfig;
 using CSScriptLib;
 using Microsoft.CodeAnalysis;
 using System;
@@ -28,7 +28,6 @@ namespace csmake
 
         private Assembly CsConfigAssembly;
 
-       
         public int Execute()
         {
             try
@@ -36,12 +35,14 @@ namespace csmake
                 var content = File.ReadAllText(UserConfigDescriptionFile);
                 CSScript.EvaluatorConfig.Engine = EvaluatorEngine.Roslyn;
                 var eva = CSScript.Evaluator;
-                CsConfigAssembly = typeof(IItem).Assembly;
+                CsConfigAssembly = typeof(IMenu).Assembly;
+                var pd = typeof(Avalonia.PropertyGrid.Controls.PropertyGrid).Assembly;
                 CSScript.RoslynEvaluator.ReferenceAssembly(CsConfigAssembly);
+                CSScript.RoslynEvaluator.ReferenceAssembly(pd);
                 CSScript.RoslynEvaluator.ReferenceDomainAssemblies();
                 UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script });
                 IMenu userConfig = null;
-                (App.UserScriptDescriptionMenuInstance,userConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
+                //(App.UserScriptDescriptionMenuInstance,userConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
 
                 var appBuilder = AppBuilder.Configure<App>()
                .UsePlatformDetect()

@@ -5,7 +5,7 @@ using Avalonia.Markup.Xaml;
 
 using AvaloniaFrontEnd.ViewModels;
 using AvaloniaFrontEnd.Views;
-using CSConfig;
+using CsConfig;
 using System.Reflection;
 
 namespace AvaloniaFrontEnd;

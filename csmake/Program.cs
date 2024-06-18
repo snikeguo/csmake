@@ -19,8 +19,8 @@ class Program
     [STAThread]
     public static void Main(string[] args)
     {
-        var componentExecuteResult = ComponentManager.CommandExecute(args);
-        //BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+        //var componentExecuteResult = ComponentManager.CommandExecute(args);
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     }
     public static AppBuilder BuildAvaloniaApp()
     {

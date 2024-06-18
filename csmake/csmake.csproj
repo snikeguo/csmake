@@ -10,9 +10,14 @@
     <AssemblyName>csmake</AssemblyName>
     <RootNamespace>csmake</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="CsConfigFile2CHeadFileCommand.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="11.0.10" />
+    <PackageReference Include="bodong.Avalonia.PropertyGrid" Version="11.0.10.1" />
+    <PackageReference Include="bodong.PropertyModels" Version="11.0.10.1" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="CS-Script" Version="4.8.16" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
