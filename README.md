@@ -3,38 +3,20 @@
 
 
 编译:
-1.VS2022安装Avalonia for VS2022 扩展。
-2.编译csmake仓库
-3.F5调试。他会使用$root\CSConfigSln\csmake\bin\Debug\net7.0\CsConfigDescription.cs作为脚本(类似于kconfig脚本)输入，渲染一个tree
-4.非调试运行：$root\CSConfigSln\csmake\bin\Debug\net7.0> .\csmake.exe CsConfig -d CsConfigDescription.cs -u 33.json
+* 1.VS2022安装Avalonia for VS2022 扩展。
+* 2.编译csmake仓库
+* 3.F5调试。他会使用$root\CSConfigSln\csmake\bin\Debug\net7.0\CsConfigDescription.cs作为脚本(类似于kconfig脚本)输入，渲染一个tree
+* 4.非调试运行：
+    
+    .\csmake.exe menuconfig -d CsConfigDescription.cs -u 33.json
+    .\csmake.exe cs2head -d CsConfigDescription.cs -u 33.json -o myheader.h
 
 编写一个demo:主菜单名为demo,demo中有三个项a,b,c,其中c=a+b,c使用16进制表示
 ```
-using CSConfig;
-using System;
-using csmake;
-[MainMenu]
-public class DemoMainMenu : IMenu
-{
-    public string Name =>"demo";
-    public static DemoMainMenu gInstnace{get;set;}=new DemoMainMenu();
-    [ItemConfig]
-    public Config A{get;set;}=new Config() { ConfigType = ConfigType.Int, Name = "A", Value = (Int64)1};
-    [ItemConfig]
-    public Config B{get;set;}=new Config() { ConfigType = ConfigType.Int, Name = "B", Value = (Int64)1};
-    [ItemConfig]
-    public Config C{get;set;}=new Config() { ConfigType = ConfigType.Int, Name = "C", Value = (Int64)1,IsHexShow=true};
-    public void ItemValueChanged(IItem cfg)
-    {
-        if(cfg==A ||cfg==B)
-        {
-            C.Value=(Int64)A.Value+(Int64)B.Value;
-        }
-    }
-}
+
 ```
-保存为test.json
-输入命令.\csmake.exe CsConfig -d test.cs   这里没有-u xxx.json 是因为我们没有默认的用户配置文件。
+保存为test.cs
+输入命令.\csmake.exe menuconfig -d test.cs   这里没有-u xxx.json 是因为我们没有默认的用户配置文件。
 如图所示.
 ![](./doc/sample.jpg)
 

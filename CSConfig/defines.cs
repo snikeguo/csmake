@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-
+using System.Diagnostics;
+using System.Reflection;
 namespace CSConfig
 {
     public enum ConfigType
@@ -13,8 +14,8 @@ namespace CSConfig
     }
     public enum Tristate
     {
-        Y,
         N,
+        Y, 
         M,
     }
 
@@ -37,7 +38,11 @@ namespace CSConfig
     {
         [JsonIgnore]
         public ConfigType ConfigType { get; set; }
+        [JsonIgnore]
+        public string Key { get; set; }
+
         public object Value { get;set; }
+        [JsonIgnore]
         public bool IsHexShow { get; set; }
         [JsonIgnore]
         public string Help { get; set; }
@@ -80,6 +85,7 @@ namespace CSConfig
         }
     }
 
+    
     public interface IMenu : IItem
     {
         public string ToString()

@@ -1,30 +1,50 @@
 {
   "Name": "MyMainMenu",
-  "MainMenuConfig": {
-    "Value": "vscode2",
-    "IsHexShow": false,
-    "Name": "XXX1"
+  "BoolConfig": {
+    "Value": false,
+    "Name": "BoolType"
+  },
+  "TristateConfig": {
+    "Value": 2,
+    "Name": "TristateType"
+  },
+  "StringConfig": {
+    "Value": "444",
+    "Name": "StringType"
+  },
+  "IntConfig": {
+    "Value": 25,
+    "Name": "IntType"
+  },
+  "IntHexConfig": {
+    "Value": 24,
+    "Name": "IntHexType"
+  },
+  "UIntConfig": {
+    "Value": 3,
+    "Name": "UIntType"
+  },
+  "UIntHexConfig": {
+    "Value": 3,
+    "Name": "UIntHexType"
+  },
+  "DoubleConfig": {
+    "Value": 2.6,
+    "Name": "DoubleType"
+  },
+  "ChoiceConfig": {
+    "SelectedConfig": {
+      "Value": false,
+      "Name": "s32k"
+    },
+    "Name": "choice name"
   },
   "menu1": {
     "Name": "menu1",
     "Help": "menu1 help",
     "Menu1Config": {
-      "Value": 3,
-      "IsHexShow": true,
+      "Value": 102,
       "Name": "Ram Menu1Config"
-    },
-    "Menu1StringConfig": {
-      "Value": "vscode2",
-      "IsHexShow": false,
-      "Name": "chipname"
-    },
-    "Menu1Choice": {
-      "SelectedConfig": {
-        "Value": false,
-        "IsHexShow": false,
-        "Name": "Tc397"
-      },
-      "Name": "选择开发板"
     }
   }
 }

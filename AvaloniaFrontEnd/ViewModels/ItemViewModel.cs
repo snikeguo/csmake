@@ -1,4 +1,5 @@
-﻿using ReactiveUI;
+﻿using CSConfig;
+using ReactiveUI;
 using System;
 
 namespace AvaloniaFrontEnd.ViewModels;
@@ -26,4 +27,10 @@ public class ItemViewModel : ViewModelBase
     ///  Gets an array of all available ShapeTypes
     /// </summary>
     public ItemType[] AvailableShapes { get; } = Enum.GetValues<ItemType>();
+}
+
+public class ConfigComboBoxItemModel
+{
+    public IItem Source { get; set; }
+    public string Name=>Source.Name;
 }

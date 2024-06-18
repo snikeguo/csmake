@@ -36,7 +36,6 @@ public partial class App : Application
 
         base.OnFrameworkInitializationCompleted();
     }
-    public static Assembly CsScriptDescriptionAssembly { get; set; }
-    public static Assembly CsConfigAssembly { get; set; }
-    public static string UserConfigString { get; set; }
+    //public static Assembly CsConfigAssembly { get; set; }
+    public static IMenu UserScriptDescriptionMenuInstance { get; set; }
 }

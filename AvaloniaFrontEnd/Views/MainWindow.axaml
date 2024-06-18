@@ -66,11 +66,7 @@
 				Grid.Row="1" VerticalAlignment="Top"
 					  LostFocus="SelectedItemComboBox_LostFocus"
 				>
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
-						<TextBlock Text="{Binding Name}"/>
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
+				
 				
 			</ComboBox>
 

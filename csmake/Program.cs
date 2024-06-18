@@ -2,7 +2,15 @@
 using Avalonia.ReactiveUI;
 using AvaloniaFrontEnd;
 using System;
+using System.Diagnostics;
 namespace csmake;
+public static class Host
+{
+    public static void WriteLine(string format, params string[] d)
+    {
+        Debug.WriteLine(format, d);
+    }
+}
 class Program
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any

@@ -29,121 +29,36 @@ public partial class MainWindow : Window
         InitializeComponent();
         
     }
-    private async void Window_Loaded(object sender, RoutedEventArgs e)
+    private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-       await KConfigRendering(App.CsScriptDescriptionAssembly, App.CsConfigAssembly, App.UserConfigString);
+       KConfigRendering(App.UserScriptDescriptionMenuInstance);
     }
-    public async Task KConfigRendering(Assembly cssriptAssembly, Assembly csConfigAssembly, string userConfigStr)
-    {
-        var allTypes = cssriptAssembly.GetTypes();
-        CSConfig.IMenu mainMenu = null;
-        object configObject = null;
-        Type mainMenuType = null;
-        foreach (var type in allTypes)
-        {
-            var mainMenuAttr = type.GetCustomAttribute<MainMenuAttribute>();
-            if (mainMenuAttr != null)
-            {
-                mainMenuType = type;
-                try
-                {
-                    configObject = JsonConvert.DeserializeObject(userConfigStr, type);
-                }
-                catch (Exception)
-                {
-                    var box = MessageBoxManager.GetMessageBoxStandard("Caption", "cs config type != user config type!", ButtonEnum.Ok);
-                    await box.ShowAsync();
-                }
-                var mainMenuProperties = type.GetProperties();
-                foreach (var p in mainMenuProperties)
-                {
-                    if((p.IsStatic() == true) && p.PropertyType==type)
-                    {
-                        mainMenu = (CSConfig.IMenu)(p.GetValue(null));
-                        if(mainMenu==null)
-                        {
-                            var box = MessageBoxManager.GetMessageBoxStandard("Caption", "please define static menu object!!", ButtonEnum.Ok);
-                            await box.ShowAsync();
-                            return;
-                        }
-                        break;
-                    }
-                }
-                
-                break;
-            }
-        }
+    public void KConfigRendering(IMenu userScriptDescriptionMenu)
+    {  
         var mainGuiMenu = new MenuNode();
         mainGuiMenu.Parent = null;
-        KConfigRenderingInternal(mainGuiMenu, mainMenu, cssriptAssembly, csConfigAssembly);
-        if (configObject ==null||mainGuiMenu.Source.GetType() != configObject.GetType())
-        {
-            //var box = MessageBoxManager.GetMessageBoxStandard("Caption", "cs config type != user config type!", ButtonEnum.Ok);
-            //await box.ShowAsync();
-            //return ;
-        }
-        else
-        {
-            UpdateMenuValue(mainGuiMenu.Source, configObject, mainMenuType);
-        }
-        
+        KConfigRenderingInternal(mainGuiMenu, userScriptDescriptionMenu);
         KconfigTreeView.Items.Add(mainGuiMenu);
     }
     private void CallItemValueChanrged(object guiObj,object property)
     {
-        CSConfig.IMenu menu = (CSConfig.IMenu)guiObj;
+        IMenu menu = (IMenu)guiObj;
         menu.ItemValueChanged(property as IItem);
     }
-    private void UpdateMenuValue(object guiMenu,object cfgMainMenu,Type menutype)
+    
+    public void KConfigRenderingInternal(MenuNode guiMenu, IMenu userMenu)
     {
-        var properties = menutype.GetProperties();
-        foreach (var property in properties)
-        {
-            var itemAttr = property.GetCustomAttribute<ItemConfigAttribute>();
-            if(itemAttr!= null)
-            {
-                if (property.PropertyType == typeof(Config))
-                {
-                    Config cfgv = (Config)property.GetValue(cfgMainMenu);
-                    Config guiv = (Config)property.GetValue(guiMenu);
-                    guiv.Value = cfgv.Value;
-                    CallItemValueChanrged(guiMenu, guiv);
-                }
-                else if (property.PropertyType == typeof(Choice))
-                {
-                    Choice cfgv = (Choice)property.GetValue(cfgMainMenu);
-                    Choice guiv= (Choice)property.GetValue(guiMenu);
-                    guiv.SelectedConfig = cfgv.SelectedConfig;
-                    CallItemValueChanrged(guiMenu, guiv);
-                }
-                else if (property.PropertyType.GetInterfaces().Contains(typeof(CSConfig.IMenu)))
-                {
-                    object cfgv = property.GetValue(cfgMainMenu);
-                    object guiv = property.GetValue(guiMenu);
-                    UpdateMenuValue(guiv, cfgv, property.PropertyType);
-                }
-            }
-        }
-    }
-    public void KConfigRenderingInternal(MenuNode guiMenu, CSConfig.IMenu menu, Assembly cssriptAssembly,Assembly csConfigAssembly)
-    {
-        var properties = menu.GetType().GetProperties();
-        guiMenu.Source = menu;
+        var properties = userMenu.GetType().GetProperties();
+        guiMenu.Source = userMenu;
         foreach (var property in properties)
         {
             var itemAttr = property.GetCustomAttribute<ItemConfigAttribute>();
             if (itemAttr != null)
             {
-                var value = property.GetValue(menu);
+                var value = property.GetValue(userMenu);
 
                 if (property.PropertyType == typeof(Config))
                 {
-                    if (value == null)
-                    {
-                        value = csConfigAssembly.CreateInstance(property.PropertyType.FullName);
-                        property.SetValue(menu, value);
-                    }
-
                     Config config = (Config)value;
                     var configNode = new MenuNode();
                     configNode.Source = config;
@@ -151,37 +66,24 @@ public partial class MainWindow : Window
                     guiMenu.Items.Add(configNode);
                 }
                 else if (property.PropertyType == typeof(Choice))
-                {
-                    if (value == null)
-                    {
-                        value = csConfigAssembly.CreateInstance(property.PropertyType.FullName);
-                        property.SetValue(menu, value);
-                    }
-
+                { 
                     Choice choice = (Choice)value;
                     var choiceNode=new MenuNode();
                     choiceNode.Source = choice;
                     choiceNode.Parent = guiMenu;
                     guiMenu.Items.Add(choiceNode);
                 }
-                else if (property.PropertyType.GetInterfaces().Contains(typeof(CSConfig.IMenu)))
+                else if (property.PropertyType.GetInterfaces().Contains(typeof(IMenu)))
                 {
-                    if (value == null)
-                    {
-                        value = cssriptAssembly.CreateInstance(property.PropertyType.FullName);
-                        property.SetValue(menu, value);
-                    }
-
-                    CSConfig.IMenu subMenu = (CSConfig.IMenu)value;
+                    IMenu subMenu = (IMenu)value;
                     Debug.WriteLine($"Menu:{subMenu.Name}");
                     var subGuiMenu=new MenuNode();
                     subGuiMenu.Parent = guiMenu;
-                    KConfigRenderingInternal(subGuiMenu, subMenu, cssriptAssembly, csConfigAssembly);
+                    KConfigRenderingInternal(subGuiMenu, subMenu);
                     guiMenu.Items.Add(subGuiMenu);
                 }
             }
         }
-        return ;
     }
 
     private MenuNode CurrentMenuNode = null;
@@ -201,6 +103,7 @@ public partial class MainWindow : Window
                 SelectedItemTextBox.IsEnabled = false;
                 SelectedItemComboBox.IsEnabled = true;
                 SelectedItemComboBox.ItemsSource = null;
+                SelectedItemComboBox.Items.Clear();
                 SelectedItemComboBox.ItemsSource = new List<bool> { false, true };
                 var value = false;
                 value = (bool)config.Value;
@@ -266,13 +169,18 @@ public partial class MainWindow : Window
             SelectedItemTextBox.Text = "";
             SelectedItemTextBox.IsEnabled = false;
             SelectedItemComboBox.ItemsSource= null;
-            SelectedItemComboBox.Items.Clear();
-            SelectedItemComboBox.ItemsSource = choice.Configs;
+            //SelectedItemComboBox.Items.Clear();
+            List<string> configNamesOfChoice= new List<string>();   
+            foreach (var item in choice.Configs)
+            {
+                configNamesOfChoice.Add(item.Name);
+            }
+            SelectedItemComboBox.ItemsSource=configNamesOfChoice;
             foreach (var lc in choice.Configs)
             {
                 if (lc.Name == choice.SelectedConfig.Name)
                 {
-                    SelectedItemComboBox.SelectedItem = lc;
+                    SelectedItemComboBox.SelectedItem = lc.Name;
                     break;
                 }
             }
@@ -288,7 +196,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void SaveConfigButton_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void SaveConfigButton_Click(object? sender, RoutedEventArgs e)
     {
         var topLevel = GetTopLevel(this);
 
@@ -308,7 +216,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private async void SelectedItemTextBox_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private async void SelectedItemTextBox_LostFocus(object? sender, RoutedEventArgs e)
     {
         if(CurrentMenuNode!=null)
         {
@@ -356,7 +264,7 @@ public partial class MainWindow : Window
             }
         }
     }
-    private void SelectedItemComboBox_LostFocus(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+    private void SelectedItemComboBox_LostFocus(object? sender, RoutedEventArgs e)
     {
         if (CurrentMenuNode != null)
         {
@@ -372,9 +280,16 @@ public partial class MainWindow : Window
             else
             {
                 Choice choice=CurrentMenuNode.Source as Choice;
-                if(choice!=null)
+                if(choice!=null && SelectedItemComboBox.SelectedItem!=null)
                 {
-                    choice.SelectedConfig = (Config)SelectedItemComboBox.SelectedItem;
+                    foreach (var lc in choice.Configs)
+                    {
+                        if (lc.Name == SelectedItemComboBox.SelectedItem.ToString())
+                        {
+                            choice.SelectedConfig = lc;
+                            break;
+                        }
+                    }
                     CallItemValueChanrged(CurrentMenuNode.Parent.Source, choice);
                 }
             }
