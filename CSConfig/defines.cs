@@ -5,12 +5,7 @@ using System.Reflection;
 namespace CsConfig
 {
 
-    public enum Tristate
-    {
-        N,
-        Y, 
-        M,
-    }
+    
 
     public class SelectableList<T> where T: IEquatable<T>
     {
@@ -20,10 +15,11 @@ namespace CsConfig
 
         [JsonIgnore]
         public bool CanAddForUser { get; set; } = false;
-        public SelectableList(List<T> items,T selectedItem) 
+        public SelectableList(List<T> items,T selectedItem,bool canAdd=false) 
         {
             Items=items;
             SelectedItem=selectedItem;
+            CanAddForUser = canAdd;
         } 
     }
     public interface IMenu 

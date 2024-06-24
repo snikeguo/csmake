@@ -40,7 +40,12 @@ public class Menu1 : IMenu
         }
     }
 }
-
+public enum Tristate
+{
+    N,
+    Y, 
+    M,
+}
 //主菜单
 [MainMenu]
 public class MyMainMenu : IMenu
@@ -58,7 +63,7 @@ public class MyMainMenu : IMenu
 
     [Item("ByteConfig", "desc", "CONFIG_Byte_VALUE")]
     [Hex]
-    public byte ByteInstance { get; set; } = 1;
+    public byte ByteInstance { get; set; } = 2;
 
     [Item("ChoiceIntConfig", "desc", "CONFIG_ChoiceInt_VALUE")]
     public SelectableList<int> ChoiceIntConfig { get; set; } = new SelectableList<int>(new List<int>() { 1, 2, 3, 4, 5 }, 2);
