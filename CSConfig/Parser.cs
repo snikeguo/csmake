@@ -1,13 +1,112 @@
 ﻿
+using CsConfig;
 using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
-
-namespace CSConfig
+namespace CsConfig
 {
-#if false
+
     public static class Parser
     {
+        public static void ConfigParsing(Assembly CsConfigAssembly, IMenu descriptionMenu, IMenu userConfigMenu, Assembly UserScriptDescriptionAssembly)
+        {
+            var properties = descriptionMenu.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                var itemAttr = property.GetCustomAttribute<ItemAttribute>();
+                if (itemAttr != null)
+                {
+                    object oguiv = property.GetValue(descriptionMenu);
+                    object ocfgv = null;
+                    if (userConfigMenu != null)
+                    {
+                        ocfgv = property.GetValue(userConfigMenu);
+                    }
+                    if (property.PropertyType.IsValueType||property.PropertyType==typeof(string))
+                    {
+                        if(ocfgv!=null)
+                        {
+                            property.SetValue(descriptionMenu, ocfgv); 
+                        }
+                        descriptionMenu.ItemValueChanged(oguiv);
+                    }
+                    else if (property.PropertyType.IsGenericType
+                        &&property.PropertyType.GetGenericTypeDefinition() == typeof(SelectableList<>))
+                    {
+                        if (ocfgv != null)
+                        {
+                            Type vType = property.PropertyType;
+                            var selectedPropertyInfo = vType.GetProperty("SelectedValue");
+                            if (selectedPropertyInfo != null)
+                            {
+                                var s = selectedPropertyInfo.GetValue(ocfgv);
+                                selectedPropertyInfo.SetValue(oguiv, s);
+                            }
+                        }
+                        descriptionMenu.ItemValueChanged(oguiv);
+                    }
+                    else if (property.PropertyType.GetInterfaces().Contains(typeof(IMenu)))
+                    {
+                        var guiv = (IMenu)oguiv;
+                        var cfgv = (IMenu)(ocfgv);
+                        if (guiv == null)
+                        {
+                            guiv = (IMenu)UserScriptDescriptionAssembly.CreateInstance(property.PropertyType.FullName);
+                            property.SetValue(descriptionMenu, guiv);
+                        }
+                        //Debug.WriteLine($"Menu:{subMenu.Name}");
+                        ConfigParsing(CsConfigAssembly, guiv, cfgv, UserScriptDescriptionAssembly);
+                    }
+                }
+            }
+        }
+        public static (IMenu, IMenu) Parse(Assembly UserScriptDescriptionAssembly, string UserConfigFilePath)
+        {
+            var CsConfigAssembly = Assembly.GetExecutingAssembly();
+            var allTypes = UserScriptDescriptionAssembly.GetTypes();
+            IMenu mainMenu = null;
+            Type mainMenuType = null;
+            IMenu userConfig = null;
+
+            foreach (var type in allTypes)
+            {
+                var mainMenuAttr = type.GetCustomAttribute<MainMenuAttribute>();
+                if (mainMenuAttr != null)
+                {
+                    mainMenuType = type;
+                    try
+                    {
+                        var userConfigText = File.ReadAllText(UserConfigFilePath);
+                        userConfig = (IMenu)JsonConvert.DeserializeObject(userConfigText, type);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("cs config type != user config type!");
+                    }
+
+                    var mainMenuProperties = mainMenuType.GetProperties();
+                    foreach (var p in mainMenuProperties)
+                    {
+                        if (p.PropertyType == type)
+                        {
+                            mainMenu = (IMenu)(p.GetValue(null));
+                            if (mainMenu == null)
+                            {
+                                Console.WriteLine("please define static menu object!!");
+                                return (null, userConfig);
+                            }
+                            ConfigParsing(CsConfigAssembly, mainMenu, userConfig, UserScriptDescriptionAssembly);
+                            return (mainMenu, userConfig);
+                        }
+                    }
+                    break;
+                }
+            }
+
+            return (null, null);
+        }
+#if false
         public static void ConfigParsing(Assembly CsConfigAssembly, IMenu descriptionMenu,IMenu userConfigMenu, Assembly UserScriptDescriptionAssembly)
         {
             var properties = descriptionMenu.GetType().GetProperties();
@@ -140,6 +239,7 @@ namespace CSConfig
                 }
             }
         }
+#endif
 #if false
         public static void UpdateMenuValue(IMenu descriptionMenu, IMenu userCfgMainMenu)
         {
@@ -181,5 +281,5 @@ namespace CSConfig
         }
 #endif
     }
-#endif
+
 }

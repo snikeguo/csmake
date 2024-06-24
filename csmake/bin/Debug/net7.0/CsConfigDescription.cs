@@ -1,17 +1,44 @@
-﻿using CSConfig;
+﻿using CsConfig;
 using System;
 using csmake;
 using System.Collections.Generic;
+
+
+public class CanController : IEquatable<CanController>, IMenu
+{
+    public int BaudRate { get; set; }
+    public bool Equals(CanController other)
+    {
+        if (other.BaudRate == BaudRate)
+            return true;
+        return false;
+    }
+    public void ItemValueChanged(object item)
+    {
+
+    }
+}
+
 //子菜单
 public class Menu1 : IMenu
 {
-    public string Name => "menu1";
-    public string Help => "menu1 help";
-    [ItemConfig]
-    public Config Menu1Config { get; set; } = new Config() { Key = "CONFIG_RAM_ADDRESS", ConfigType = ConfigType.Int, IsHexShow = true, Value = 0x0, Depends = null, EnableControl = null, Help = "ram start address!", Name = "Ram Menu1Config" };
-    public void ItemValueChanged(IItem cfg)
-    {
 
+    [Item("ChoiceCanController", "desc", "CONFIG_ChoiceCanController_VALUE")]
+
+    public SelectableList<CanController> CanControllerConfig { get; set; }
+
+    public Menu1()
+    {
+        var br250k = new CanController() { BaudRate = 250 };
+        var br125k = new CanController() { BaudRate = 125 };
+        CanControllerConfig = new SelectableList<CanController>(new List<CanController>() { br125k, br250k }, br250k);
+    }
+    public void ItemValueChanged(object cfg)
+    {
+        if(cfg == (object)CanControllerConfig)
+        {
+            Host.WriteLine("CanControllerConfig is changed!");
+        }
     }
 }
 
@@ -21,58 +48,35 @@ public class MyMainMenu : IMenu
 {
     public static MyMainMenu gInstnace { get; set; } = new MyMainMenu();
     public string Name => "MyMainMenu";
-    [ItemConfig]
-    public Config BoolConfig { get; set; } = new Config() { Key = "CONFIG_Bool_VALUE", ConfigType = ConfigType.Bool, Name = "BoolType", Value = true };
+    [Item("BoolConfig", "desc", "CONFIG_Bool_VALUE")]
+    public bool BoolInstance { get; set; }
 
-    [ItemConfig]
-    public Config TristateConfig { get; set; } = new Config() { Key = "CONFIG_Tristate_VALUE", ConfigType = ConfigType.Tristate, Name = "TristateType", Value = Tristate.Y };
+    [Item("TristateConfig", "desc", "CONFIG_Bool_VALUE")]
+    public Tristate TristateInstance { get; set; } = Tristate.Y;
 
-    [ItemConfig]
-    public Config StringConfig { get; set; } = new Config() { Key = "CONFIG_String_VALUE", ConfigType = ConfigType.String, Name = "StringType", Value = "123" };
+    [Item("StringConfig", "desc", "CONFIG_String_VALUE")]
+    public string StringConfig { get; set; } = "123";
 
-    [ItemConfig]
-    public Config IntConfig { get; set; } = new Config() { Key = "CONFIG_Int_VALUE", ConfigType = ConfigType.Int, Name = "IntType", Value = (UInt64)1 };
+    [Item("ByteConfig", "desc", "CONFIG_Byte_VALUE")]
+    public byte ByteInstance { get; set; } = 1;
 
+    [Item("ChoiceIntConfig", "desc", "CONFIG_ChoiceInt_VALUE")]
+    public SelectableList<int> ChoiceIntConfig { get; set; } = new SelectableList<int>(new List<int>() { 1, 2, 3, 4, 5 }, 2);
 
-    [ItemConfig]
-    public Config IntHexConfig { get; set; } = new Config() { Key = "CONFIG_IntHex_VALUE", ConfigType = ConfigType.Int, Name = "IntHexType", Value = (UInt64)1, IsHexShow = true };
-
-    [ItemConfig]
-    public Config UIntConfig { get; set; } = new Config() { Key = "CONFIG_UInt_VALUE", ConfigType = ConfigType.UInt, Name = "UIntType", Value = (UInt64)1 };
-
-
-    [ItemConfig]
-    public Config UIntHexConfig { get; set; } = new Config() { Key = "CONFIG_UIntHex_VALUE", ConfigType = ConfigType.UInt, Name = "UIntHexType", Value = (UInt64)1, IsHexShow = true };
-
-    [ItemConfig]
-    public Config DoubleConfig { get; set; } = new Config() { Key = "CONFIG_Double_VALUE", ConfigType = ConfigType.Double, Name = "DoubleType", Value = (double)1.3 };
-
-    [ItemConfig]
-    public Choice ChoiceConfig { get; set; }
-
-    [ItemConfig]
+    [Item("Menu1Config", "desc", "")]
     public Menu1 menu1 { get; set; }
 
-    public MyMainMenu()
+    public void ItemValueChanged(object cfg)
     {
-        ChoiceConfig = new Choice()
+        Host.WriteLine(cfg.ToString());
+        if(cfg == (object)BoolInstance)
         {
-            Configs = new List<Config>()
-            {
-            new Config() {Key = "CONFIG_CHIP_TC397", ConfigType = ConfigType.Bool, Value = false, Depends = null, EnableControl = null, Help = "英飞凌的板子 中文测试", Name = "Tc397" },
-            new Config() {Key = "CONFIG_CHIP_S32K", ConfigType = ConfigType.Bool, Value = false, Depends = null, EnableControl = null, Name = "s32k" },
-
-            },
-            Help = "choice help",
-            Name = "choice name",
-        };
-        ChoiceConfig.SelectedConfig=ChoiceConfig.Configs[0];
-    }
-    public void ItemValueChanged(IItem cfg)
-    {
-        if (cfg == IntConfig)
+             Host.WriteLine("222");
+            StringConfig=BoolInstance.ToString();
+        }
+        else if(cfg ==(object) ByteInstance)
         {
-            gInstnace.IntHexConfig.Value = IntConfig.Value;
+            ChoiceIntConfig.SelectedItem=(int)ByteInstance;
         }
     }
 }

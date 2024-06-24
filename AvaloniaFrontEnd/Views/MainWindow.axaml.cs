@@ -33,13 +33,14 @@ public partial class MainWindow : Window
     }
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-        ConfigPropertyGrid.DataContext = MyMainMenu.Instance;
+        
     }
     private void SaveConfigButton_Click(object? sender, RoutedEventArgs e)
     {
 
     }
 }
+#if false
 [TypeConverter(typeof(ExpandableObjectConverter))]
 public class Menu2 : IMenu
 {
@@ -154,3 +155,4 @@ public class MyMainMenu : IMenu
         throw new NotImplementedException();    
     }
 }
+#endif
