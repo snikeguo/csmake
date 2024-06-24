@@ -17,6 +17,9 @@ namespace CsConfig
         public T SelectedItem { get; set; }
         [JsonIgnore]
         public List<T> Items { get; set; }
+
+        [JsonIgnore]
+        public bool CanAddForUser { get; set; } = false;
         public SelectableList(List<T> items,T selectedItem) 
         {
             Items=items;

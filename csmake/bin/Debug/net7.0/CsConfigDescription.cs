@@ -57,6 +57,7 @@ public class MyMainMenu : IMenu
     public string StringConfig { get; set; } = "123";
 
     [Item("ByteConfig", "desc", "CONFIG_Byte_VALUE")]
+    [Hex]
     public byte ByteInstance { get; set; } = 1;
 
     [Item("ChoiceIntConfig", "desc", "CONFIG_ChoiceInt_VALUE")]
