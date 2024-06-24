@@ -25,7 +25,7 @@ namespace CsConfig
     }
     public interface IMenu 
     {
-        public void ItemValueChanged(object item);
+        public void ItemValueChanged(string propertyName);
     }
 
     [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]

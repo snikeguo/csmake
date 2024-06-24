@@ -3,7 +3,6 @@ using System;
 using csmake;
 using System.Collections.Generic;
 
-
 public class CanController : IEquatable<CanController>, IMenu
 {
     public int BaudRate { get; set; }
@@ -13,7 +12,7 @@ public class CanController : IEquatable<CanController>, IMenu
             return true;
         return false;
     }
-    public void ItemValueChanged(object item)
+    public void ItemValueChanged(string propertyName)
     {
 
     }
@@ -33,9 +32,9 @@ public class Menu1 : IMenu
         var br125k = new CanController() { BaudRate = 125 };
         CanControllerConfig = new SelectableList<CanController>(new List<CanController>() { br125k, br250k }, br250k);
     }
-    public void ItemValueChanged(object cfg)
+    public void ItemValueChanged(string propertyName)
     {
-        if(cfg == (object)CanControllerConfig)
+       if(propertyName==nameof(CanControllerConfig))
         {
             Host.WriteLine("CanControllerConfig is changed!");
         }
@@ -66,17 +65,18 @@ public class MyMainMenu : IMenu
     [Item("Menu1Config", "desc", "")]
     public Menu1 menu1 { get; set; }
 
-    public void ItemValueChanged(object cfg)
+    public void ItemValueChanged(string propertyName)
     {
-        Host.WriteLine(cfg.ToString());
-        if(cfg == (object)BoolInstance)
+        Host.WriteLine(propertyName.ToString());
+        if(propertyName==nameof(BoolInstance))
         {
-             Host.WriteLine("222");
+            Host.WriteLine("222");
             StringConfig=BoolInstance.ToString();
         }
-        else if(cfg ==(object) ByteInstance)
+        else if(propertyName==nameof(ByteInstance))
         {
             ChoiceIntConfig.SelectedItem=(int)ByteInstance;
+            Host.WriteLine("333");
         }
     }
 }

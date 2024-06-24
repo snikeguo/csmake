@@ -3,6 +3,7 @@ using Avalonia.ReactiveUI;
 using AvaloniaFrontEnd;
 using System;
 using System.Diagnostics;
+using System.Reflection;
 namespace csmake;
 public static class Host
 {

@@ -29,7 +29,7 @@ namespace CsConfig
                         {
                             property.SetValue(descriptionMenu, ocfgv); 
                         }
-                        descriptionMenu.ItemValueChanged(oguiv);
+                        descriptionMenu.ItemValueChanged(property.Name);
                     }
                     else if (property.PropertyType.IsGenericType
                         &&property.PropertyType.GetGenericTypeDefinition() == typeof(SelectableList<>))
@@ -44,7 +44,7 @@ namespace CsConfig
                                 selectedPropertyInfo.SetValue(oguiv, s);
                             }
                         }
-                        descriptionMenu.ItemValueChanged(oguiv);
+                        descriptionMenu.ItemValueChanged(property.Name);
                     }
                     else if (property.PropertyType.GetInterfaces().Contains(typeof(IMenu)))
                     {
