@@ -27,14 +27,7 @@ namespace CSConfig
                         var cfgv = (Config)(ocfgv);
                         if (cfgv != null)
                         {
-                            if (guiv.ConfigType == ConfigType.Tristate)
-                            {
-                                guiv.Value = (Tristate)(Convert.ToInt32(cfgv.Value));
-                            }
-                            else
-                            {
-                                guiv.Value = cfgv.Value;
-                            }
+                            guiv.Value = cfgv.Value;
                         }
                         
                         descriptionMenu.ItemValueChanged(guiv);

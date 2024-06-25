@@ -3,61 +3,30 @@ using System.Diagnostics;
 using System.Reflection;
 namespace CSConfig
 {
-    public enum ConfigType
-    {
-        Bool,
-        Tristate,//y/n/m
-        String,
-        Int,
-        UInt,
-        Double,
-    }
-    public enum Tristate
-    {
-        N,
-        Y, 
-        M,
-    }
-
-
     public interface IItem
     {
-
         string Help  => null;
-
-        string Name => null;
-
-        public List<Config> Depends => null;//kconfig 遗留项
-        public List<Config> Select => null;
-        public Config EnableControl => null;
-
-
+        string DisplayName => null;
+        bool IsVisible => true;
+        bool IsReadOnly => false;
     }
 
     public class Config: IItem
     {
         [JsonIgnore]
-        public ConfigType ConfigType { get; set; }
+        public Type ConfigType { get; private set; }
         [JsonIgnore]
-        public string Key { get; set; }
-
-        public object Value { get;set; }
+        public string MacroName { get; set; }
+        public object Value { get; set; }
         [JsonIgnore]
         public bool IsHexShow { get; set; }
         [JsonIgnore]
         public string Help { get; set; }
-        //[JsonIgnore]
-        public string Name { get; set; }
-
         [JsonIgnore]
-        public List<Config> Depends { get; set; }//kconfig 遗留项
-        [JsonIgnore]
-        public List<Config> Select { get; set; }
-        [JsonIgnore]
-        public Config EnableControl { get; set; }
+        public string DisplayName { get; set; }
         public override string ToString()
         {
-            return Name;
+            return DisplayName;
         }
 
     }
@@ -66,22 +35,15 @@ namespace CSConfig
     {
         [JsonIgnore]
         public List<Config> Configs { get; set; }
-
         public Config SelectedConfig { get; set; }
 
         [JsonIgnore]
         public string Help { get; set; }
-        //[JsonIgnore]
-        public string Name { get; set; }
         [JsonIgnore]
-        public List<Config> Depends { get; set; }//kconfig 遗留项
-        [JsonIgnore]
-        public List<Config> Select { get; set; }
-        [JsonIgnore]
-        public Config EnableControl { get; set; }
+        public string DisplayName { get; set; }
         public override string ToString()
         {
-            return Name;
+            return DisplayName;
         }
     }
 
@@ -90,7 +52,7 @@ namespace CSConfig
     {
         public string ToString()
         {
-            return Name;
+            return DisplayName;
         }
         public void ItemValueChanged(IItem item);
     }
@@ -100,8 +62,6 @@ namespace CSConfig
     {
         
     }
-
-    
 
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = true)]
     public class MainMenuAttribute : Attribute

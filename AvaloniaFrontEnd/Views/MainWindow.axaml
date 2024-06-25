@@ -14,7 +14,33 @@
 		Loaded="Window_Loaded"
         Title="AvaloniaFrontEnd">
 	<Window.Resources>
-
+		<dataTemplates:MyDataTemplateSelector x:Key="myDataTemplateSelector">
+			<dataTemplates:MyDataTemplateSelector.BoolTemplate>
+				<DataTemplate>
+					<CheckBox IsChecked="{Binding ., UpdateSourceTrigger=PropertyChanged}" />
+				</DataTemplate>
+			</dataTemplates:MyDataTemplateSelector.BoolTemplate>
+			<dataTemplates:MyDataTemplateSelector.StringTemplate>
+				<DataTemplate>
+					<TextBox Text="{Binding ., UpdateSourceTrigger=PropertyChanged}" />
+				</DataTemplate>
+			</dataTemplates:MyDataTemplateSelector.StringTemplate>
+			<dataTemplates:MyDataTemplateSelector.NumberTemplate>
+				<DataTemplate>
+					<TextBox Text="{Binding ., StringFormat='{}{0:N2}', UpdateSourceTrigger=PropertyChanged}" />
+				</DataTemplate>
+			</dataTemplates:MyDataTemplateSelector.NumberTemplate>
+			<dataTemplates:MyDataTemplateSelector.SelectableListTemplate>
+				<DataTemplate>
+					<ComboBox ItemsSource="{Binding Values}" />
+				</DataTemplate>
+			</dataTemplates:MyDataTemplateSelector.SelectableListTemplate>
+			<dataTemplates:MyDataTemplateSelector.SubClassTemplate>
+				<DataTemplate>
+					<TreeView ItemsSource="{Binding}" ItemTemplateSelector="{StaticResource myDataTemplateSelector}" />
+				</DataTemplate>
+			</dataTemplates:MyDataTemplateSelector.SubClassTemplate>
+		</dataTemplates:MyDataTemplateSelector>
 	</Window.Resources>
 	<Grid>
 		<Grid.RowDefinitions>
@@ -23,7 +49,7 @@
 			<RowDefinition Height="100"/>
 		</Grid.RowDefinitions>
 		<TreeView x:Name="KconfigTreeView" Grid.Row="0" SelectionChanged="KconfigTreeView_SelectionChanged">
-			<!--
+			
 			<TreeView.DataTemplates>
 				<dataTemplates:ItemTemplateSelector>
 					<DataTemplate x:Key="Config" DataType="vm:ItemType">
@@ -42,12 +68,7 @@
 
 				</dataTemplates:ItemTemplateSelector>
 			</TreeView.DataTemplates>
-			-->
-			<TreeView.ItemTemplate>
-				<TreeDataTemplate ItemsSource="{Binding Items}">
-					<TextBlock Text="{Binding Header}"/>
-				</TreeDataTemplate>
-			</TreeView.ItemTemplate>
+		
 			
 		</TreeView>
 		<Canvas Grid.Row="1" >

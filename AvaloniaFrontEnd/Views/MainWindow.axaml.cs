@@ -97,7 +97,7 @@ public partial class MainWindow : Window
         CurrentMenuNode = tvItem;
         if (tvItem.Source is Config config)
         {
-            if (config.ConfigType == ConfigType.Bool)
+            if (config.Value.GetType() == typeof(bool))
             {
                 SelectedItemTextBox.Text = "";
                 SelectedItemTextBox.IsEnabled = false;
@@ -116,38 +116,24 @@ public partial class MainWindow : Window
                     SelectedItemComboBox.SelectedIndex = 1;
                 }
             }
-            else if (config.ConfigType == ConfigType.Tristate)
+            else if (config.Value.GetType() == typeof(Enum))
             {
                 SelectedItemTextBox.Text = "";
                 SelectedItemTextBox.IsEnabled = false;
                 SelectedItemComboBox.IsEnabled = true;
                 SelectedItemComboBox.ItemsSource = null;
-                SelectedItemComboBox.ItemsSource = new List<Tristate> { Tristate.N, Tristate.Y, Tristate.M };
+                var enumValues = Enum.GetValues(config.Value.GetType());
+                SelectedItemComboBox.ItemsSource=enumValues;
 
-                var value = Tristate.N;
-                value = (Tristate)config.Value;
-                if (value == Tristate.N)
+                foreach (var enumval in enumValues)
                 {
-                    SelectedItemComboBox.SelectedIndex = 0;
-                }
-                else if (value == Tristate.Y)
-                {
-                    SelectedItemComboBox.SelectedIndex = 1;
-                }
-                else if (value == Tristate.M)
-                {
-                    SelectedItemComboBox.SelectedIndex = 2;
+                    if(enumval==config.Value)
+                    {
+                        SelectedItemComboBox.SelectedItem=config.Value;
+                    }
                 }
             }
-            else if (config.ConfigType == ConfigType.String)
-            {
-                SelectedItemTextBox.Text = (string)config.Value;
-
-                SelectedItemTextBox.IsEnabled = true;
-                SelectedItemComboBox.ItemsSource = null; 
-                SelectedItemComboBox.IsEnabled = false;
-            }
-            else if(config.ConfigType == ConfigType.Int || config.ConfigType == ConfigType.UInt || config.ConfigType == ConfigType.Double)
+            else if (config.Value.GetType().IsValueType)
             {
                 object v = config.Value;
                 if (config.IsHexShow)
@@ -162,6 +148,15 @@ public partial class MainWindow : Window
                 SelectedItemComboBox.ItemsSource = null;
                 SelectedItemComboBox.IsEnabled = false;
             }
+            else if (config.Value.GetType() == typeof(string))
+            {
+                SelectedItemTextBox.Text = (string)config.Value;
+
+                SelectedItemTextBox.IsEnabled = true;
+                SelectedItemComboBox.ItemsSource = null; 
+                SelectedItemComboBox.IsEnabled = false;
+            }
+            
             
         }
         else if(tvItem.Source is Choice choice)
@@ -218,6 +213,7 @@ public partial class MainWindow : Window
 
     private async void SelectedItemTextBox_LostFocus(object? sender, RoutedEventArgs e)
     {
+#if false
         if(CurrentMenuNode!=null)
         {
             Config config = CurrentMenuNode.Source as Config;
@@ -263,9 +259,11 @@ public partial class MainWindow : Window
                 var result = await box.ShowAsync();
             }
         }
+#endif
     }
     private void SelectedItemComboBox_LostFocus(object? sender, RoutedEventArgs e)
     {
+#if false
         if (CurrentMenuNode != null)
         {
             Config config = CurrentMenuNode.Source as Config;
@@ -295,6 +293,7 @@ public partial class MainWindow : Window
             }
               
         }
+#endif
     }
 
 }

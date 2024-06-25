@@ -16,9 +16,17 @@ namespace WpfFrontEnd.Designer
     /// </summary>
     public partial class MainWindow : Window
     {
+        public enum xx
+        {
+            X,
+            Y,
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            object x = xx.X;
+            var t=Enum.GetValues(x.GetType());
         }
 
         private void TextBox_LostFocus(object sender, RoutedEventArgs e)
