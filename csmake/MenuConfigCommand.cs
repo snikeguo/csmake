@@ -11,6 +11,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
+using System.Runtime.Serialization;
+using System.Xml;
+using Newtonsoft.Json;
 namespace csmake
 {
     
@@ -34,7 +39,7 @@ namespace csmake
             try
             {
 
-
+                // -u choice_stm32.json
 
                 var content = File.ReadAllText(UserConfigDescriptionFile);
                 CSScript.EvaluatorConfig.Engine = EvaluatorEngine.Roslyn;
@@ -42,12 +47,17 @@ namespace csmake
                 CsConfigAssembly = typeof(IItem).Assembly;
                 CSScript.RoslynEvaluator.ReferenceAssembly(CsConfigAssembly);
                 CSScript.RoslynEvaluator.ReferenceDomainAssemblies();
-                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script });
+                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName="aaa"});
                 IMenu userConfig = null;
                 (App.UserScriptDescriptionMenuInstance,userConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
-                if(false)
+                if(true)
                 {
-                    var str=Newtonsoft.Json.JsonConvert.SerializeObject(App.UserScriptDescriptionMenuInstance, Newtonsoft.Json.Formatting.Indented);
+                    var settings = new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.Objects // 必须与序列化时一致  
+                    };
+
+                    var str=JsonConvert.SerializeObject(App.UserScriptDescriptionMenuInstance,Newtonsoft.Json.Formatting.Indented, settings);
                     File.WriteAllText("choice_stm32.json", str);
                 }
                 var appBuilder = AppBuilder.Configure<App>()

@@ -1,0 +1,55 @@
+{
+  "$type": "css_root+MyMainMenu, aaa",
+  "ChipChoice": {
+    "$type": "CSConfig.Choice, CSConfig",
+    "SelectedItem": {
+      "$type": "css_root+STM32F103Menu, aaa",
+      "BoardNameConfig": {
+        "$type": "CSConfig.Config`1[[System.Boolean, System.Private.CoreLib]], CSConfig",
+        "Value": true
+      },
+      "TristateConfig": {
+        "$type": "CSConfig.Config`1[[css_root+Tristate, aaa]], CSConfig",
+        "Value": 1
+      },
+      "StringConfig": {
+        "$type": "CSConfig.Config`1[[System.String, System.Private.CoreLib]], CSConfig",
+        "Value": "123"
+      },
+      "IntConfig": {
+        "$type": "CSConfig.Config`1[[System.Int32, System.Private.CoreLib]], CSConfig",
+        "Value": 1
+      },
+      "IntHexConfig": {
+        "$type": "CSConfig.Config`1[[System.Int32, System.Private.CoreLib]], CSConfig",
+        "Value": 1
+      },
+      "UIntConfig": {
+        "$type": "CSConfig.Config`1[[System.UInt32, System.Private.CoreLib]], CSConfig",
+        "Value": 1
+      },
+      "UIntHexConfig": {
+        "$type": "CSConfig.Config`1[[System.UInt32, System.Private.CoreLib]], CSConfig",
+        "Value": 1
+      },
+      "DoubleConfig": {
+        "$type": "CSConfig.Config`1[[System.Double, System.Private.CoreLib]], CSConfig",
+        "Value": 1.5
+      },
+      "ChoiceConfig": {
+        "$type": "CSConfig.Choice, CSConfig",
+        "SelectedItem": {
+          "$type": "CSConfig.Config`1[[System.Boolean, System.Private.CoreLib]], CSConfig",
+          "Value": false
+        }
+      },
+      "RamMenu": {
+        "$type": "css_root+RamMenu, aaa",
+        "RamConfig": {
+          "$type": "CSConfig.Config`1[[System.Int32, System.Private.CoreLib]], CSConfig",
+          "Value": 0
+        }
+      }
+    }
+  }
+}

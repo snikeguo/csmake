@@ -82,7 +82,11 @@ namespace CSConfig
                     try
                     {
                         var userConfigText = File.ReadAllText(UserConfigFilePath);
-                        userConfig = (IMenu)JsonConvert.DeserializeObject(userConfigText, type);
+                        var settings = new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.Objects // 必须与序列化时一致  
+                        };
+                        userConfig = (IMenu)JsonConvert.DeserializeObject(userConfigText, type, settings);
                     }
                     catch (Exception)
                     {

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 namespace CSConfig
 {
+
     public interface IItem
     {
         [JsonIgnore]
@@ -14,7 +15,7 @@ namespace CSConfig
         [JsonIgnore]
         bool IsReadOnly => false;
     }
-
+    [Serializable]
     public class Config<T>: IItem
     {
         [JsonIgnore]
@@ -36,7 +37,7 @@ namespace CSConfig
         }
 
     }
-
+    [Serializable]
     public class Choice: IItem
     {
         [JsonIgnore]
