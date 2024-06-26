@@ -57,11 +57,10 @@ public partial class MainWindow : Window
             {
                 var value = property.GetValue(userMenu);
 
-                if (property.PropertyType == typeof(Config))
+                if (property.PropertyType == typeof(Config<>))
                 {
-                    Config config = (Config)value;
                     var configNode = new MenuNode();
-                    configNode.Source = config;
+                    configNode.Source = (IItem)value;
                     configNode.Parent = guiMenu;
                     guiMenu.Items.Add(configNode);
                 }
@@ -76,7 +75,7 @@ public partial class MainWindow : Window
                 else if (property.PropertyType.GetInterfaces().Contains(typeof(IMenu)))
                 {
                     IMenu subMenu = (IMenu)value;
-                    Debug.WriteLine($"Menu:{subMenu.Name}");
+                    Debug.WriteLine($"Menu:{subMenu.DisplayName}");
                     var subGuiMenu=new MenuNode();
                     subGuiMenu.Parent = guiMenu;
                     KConfigRenderingInternal(subGuiMenu, subMenu);
@@ -87,8 +86,10 @@ public partial class MainWindow : Window
     }
 
     private MenuNode CurrentMenuNode = null;
+
     private void KconfigTreeView_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+#if false
         KconfigTreeView.Focus();
 
         var tv = sender as TreeView;
@@ -189,6 +190,8 @@ public partial class MainWindow : Window
             SelectedItemComboBox.ItemsSource = null;
             SelectedItemComboBox.IsEnabled = false;
         }
+
+#endif 
     }
 
     private async void SaveConfigButton_Click(object? sender, RoutedEventArgs e)
@@ -302,7 +305,7 @@ public class MenuNode
     public IItem Source { get; set; }
     public List<MenuNode> Items { get; set; } = new List<MenuNode>();
     public MenuNode Parent { get; set; }
-    public string Header => Source.Name;
+    public string Header => Source.DisplayName;
   
 }
 #if false

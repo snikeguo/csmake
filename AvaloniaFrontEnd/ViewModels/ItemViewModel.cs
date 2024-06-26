@@ -32,5 +32,5 @@ public class ItemViewModel : ViewModelBase
 public class ConfigComboBoxItemModel
 {
     public IItem Source { get; set; }
-    public string Name=>Source.Name;
+    public string Name=>Source.DisplayName;
 }

@@ -21,16 +21,14 @@ namespace CSConfig
                     {
                         ocfgv = property.GetValue(userConfigMenu);
                     }
-                    if (property.PropertyType == typeof(Config))
+                    if (property.PropertyType == typeof(Config<>))
                     {
-                        var guiv = (Config)oguiv;
-                        var cfgv = (Config)(ocfgv);
-                        if (cfgv != null)
+                        if (ocfgv != null)
                         {
-                            guiv.Value = cfgv.Value;
+                            property.SetValue(descriptionMenu,ocfgv);
                         }
                         
-                        descriptionMenu.ItemValueChanged(guiv);
+                        descriptionMenu.ItemValueChanged((IItem)oguiv);
 
                     }
                     else if (property.PropertyType == typeof(Choice))
@@ -39,9 +37,18 @@ namespace CSConfig
                         var cfgv = (Choice)(ocfgv);
                         if (cfgv != null)
                         {
-                            guiv.SelectedConfig = cfgv.SelectedConfig;
-                        }   
-                        descriptionMenu.ItemValueChanged(guiv); 
+                            guiv.SelectedItem = cfgv.SelectedItem;
+                        }
+                        
+                        if (guiv.SelectedItem!=null)
+                        {
+                            descriptionMenu.ItemValueChanged(guiv);
+                            if(guiv.SelectedItem is IMenu menu)
+                            {
+                                ConfigParsing(CsConfigAssembly, menu, cfgv ==null? null: (IMenu)cfgv.SelectedItem, UserScriptDescriptionAssembly);
+                            }
+                        }
+                        
                     }
                     else if (property.PropertyType.GetInterfaces().Contains(typeof(IMenu)))
                     {
@@ -114,19 +121,27 @@ namespace CSConfig
                 {
                     var value = (IItem)property.GetValue(descriptionMenu);
 
-                    if (property.PropertyType == typeof(Config))
+                    if (property.PropertyType == typeof(Config<>))
                     {
                         action(value);
                     }
                     else if (property.PropertyType == typeof(Choice))
                     {
-                        action(value);
+                        if (value is IMenu menu)
+                        {
+                            RecursiveMenu(menu, action);
+                        }
+                        else
+                        {
+                            action(value);
+                        }
+                        
                     }
                     else if (property.PropertyType.GetInterfaces().Contains(typeof(IMenu)))
                     {
                         IMenu subMenu = (IMenu)value;
                         action(value);
-                        Debug.WriteLine($"Menu:{subMenu.Name}");
+                        Debug.WriteLine($"Menu:{subMenu.DisplayName}");
                         RecursiveMenu(subMenu, action);
                     }
                 }

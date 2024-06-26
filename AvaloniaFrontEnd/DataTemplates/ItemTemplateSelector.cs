@@ -23,7 +23,7 @@ namespace AvaloniaFrontEnd.DataTemplates
         {
             var key = "Config";
             var menuNode = data as MenuNode;
-            if (menuNode.Source is Config)
+            if (menuNode.Source.GetType()==typeof(Config<>))
             {
                 key = "Config";
             }
@@ -31,7 +31,7 @@ namespace AvaloniaFrontEnd.DataTemplates
             {
                 key = "Choice";
             }
-            else if (menuNode.Source is CSConfig.IMenu)
+            else if (menuNode.Source is IMenu)
             {
                 key = "Menu";
             }
@@ -44,7 +44,7 @@ namespace AvaloniaFrontEnd.DataTemplates
             // Our Keys in the dictionary are strings, so we call .ToString() to get the key to look up
             var key = "Config";
             var menuNode=data as MenuNode;
-            if (menuNode.Source is Config)
+            if (menuNode.Source.GetType() == typeof(Config<>))
             {
                 key = "Config";
             }

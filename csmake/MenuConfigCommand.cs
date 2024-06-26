@@ -10,7 +10,7 @@ using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-
+using System.Collections.Generic;
 namespace csmake
 {
     
@@ -28,11 +28,14 @@ namespace csmake
 
         private Assembly CsConfigAssembly;
 
-       
+        
         public int Execute()
         {
             try
             {
+
+
+
                 var content = File.ReadAllText(UserConfigDescriptionFile);
                 CSScript.EvaluatorConfig.Engine = EvaluatorEngine.Roslyn;
                 var eva = CSScript.Evaluator;
@@ -42,7 +45,11 @@ namespace csmake
                 UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script });
                 IMenu userConfig = null;
                 (App.UserScriptDescriptionMenuInstance,userConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
-
+                if(false)
+                {
+                    var str=Newtonsoft.Json.JsonConvert.SerializeObject(App.UserScriptDescriptionMenuInstance, Newtonsoft.Json.Formatting.Indented);
+                    File.WriteAllText("choice_stm32.json", str);
+                }
                 var appBuilder = AppBuilder.Configure<App>()
                .UsePlatformDetect()
                .WithInterFont()
