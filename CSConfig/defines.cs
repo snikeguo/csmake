@@ -15,7 +15,7 @@ namespace CSConfig
         [JsonIgnore]
         bool IsReadOnly => false;
     }
-    [Serializable]
+    
     public class Config<T>: IItem
     {
         [JsonIgnore]
@@ -37,7 +37,7 @@ namespace CSConfig
         }
 
     }
-    [Serializable]
+    
     public class Choice: IItem
     {
         [JsonIgnore]

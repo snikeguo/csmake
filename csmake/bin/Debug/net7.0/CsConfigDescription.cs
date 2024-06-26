@@ -3,7 +3,7 @@ using System;
 using csmake;
 using System.Collections.Generic;
 //子菜单
-[Serializable]
+
 public class RamMenu : IMenu
 {
     public string DisplayName => "RamMenu";
@@ -21,7 +21,7 @@ public enum Tristate
     Y,
     M,
 }
-[Serializable]
+
 public class STM32F103Menu : IMenu
 {
     public string DisplayName => "STM32F103Menu";
@@ -79,7 +79,7 @@ public class STM32F103Menu : IMenu
         }
     }
 }
-[Serializable]
+
 public class S32KMenu : IMenu
 {
     public string DisplayName => "S32KMenu";
@@ -95,7 +95,7 @@ public class S32KMenu : IMenu
 }
 //主菜单
 [MainMenu]
-[Serializable]
+
 public class MyMainMenu : IMenu
 {
     public static MyMainMenu gInstnace { get; set; } = new MyMainMenu();
