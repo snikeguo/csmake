@@ -47,7 +47,7 @@ namespace csmake
                 CsConfigAssembly = typeof(IItem).Assembly;
                 CSScript.RoslynEvaluator.ReferenceAssembly(CsConfigAssembly);
                 CSScript.RoslynEvaluator.ReferenceDomainAssemblies();
-                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName="aaa"});
+                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName="csmake.userscript"});
                 IMenu userConfig = null;
                 (App.UserScriptDescriptionMenuInstance,userConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
                 if(true)

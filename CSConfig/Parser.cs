@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json;
+using System;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -21,15 +22,18 @@ namespace CSConfig
                     {
                         ocfgv = property.GetValue(userConfigMenu);
                     }
-                    if (property.PropertyType == typeof(Config<>))
+                    if (property.PropertyType.IsGenericType)
                     {
-                        if (ocfgv != null)
+                        var configType=property.PropertyType.GetGenericTypeDefinition();
+                        if(configType==typeof(Config<>))
                         {
-                            property.SetValue(descriptionMenu,ocfgv);
-                        }
-                        
-                        descriptionMenu.ItemValueChanged((IItem)oguiv);
+                            if (ocfgv != null)
+                            {
+                                property.SetValue(descriptionMenu, ocfgv);
+                            }
 
+                            descriptionMenu.ItemValueChanged((IItem)oguiv);
+                        }
                     }
                     else if (property.PropertyType == typeof(Choice))
                     {
@@ -39,16 +43,26 @@ namespace CSConfig
                         {
                             guiv.SelectedItem = cfgv.SelectedItem;
                         }
-                        
+#if true
+                        //这里注释的原因是,如果是IMenu类型，JSON文件会实例化SelectedItem的类型，直接将JSON实例化出来的对象给到guiv.SelectedItem就可以了
+                        //但是我觉得又可以打开，万一描述文件(cs文件)逻辑发生变化，举个例子:
+                        //现在有三项a  b c ，旧的描述文件为c=a+b,那么配置出来的结果就c=a+b 比如c=3,a=1,b=2
+                        //然后后来发现用户这个逻辑写错了,不应该是c=a+b,而是c=b-a;
+                        //如果把这个注释后,就会出现c=3,a=1,b=2显然不符合新的逻辑
+                        //按道理来说c需要更新,如果把这个宏打开，并且反射遍历property的时候,c在前面 a和b在后面,那么c的值就有机会变成1,因为执行了c=b-a
+                        //当反射遍历property时,如果c在后面,那么c的值就无法变成1,仍然保持3,除非你在ItemValueChanged回调函数里去写b=c-a或者a=c-b
+                        //也就是说双向校验了：a,b变则c变,c变则a变或者b变,我相信很多人不会写这个反向校验,因为预计牵扯的量太多。
+                        //所以开启这个宏并不能解决数据之间的关系,但是开启宏后会调用ItemValueChanged
                         if (guiv.SelectedItem!=null)
                         {
-                            descriptionMenu.ItemValueChanged(guiv);
+                            
                             if(guiv.SelectedItem is IMenu menu)
                             {
                                 ConfigParsing(CsConfigAssembly, menu, cfgv ==null? null: (IMenu)cfgv.SelectedItem, UserScriptDescriptionAssembly);
                             }
                         }
-                        
+#endif
+                        descriptionMenu.ItemValueChanged(guiv);
                     }
                     else if (property.PropertyType.GetInterfaces().Contains(typeof(IMenu)))
                     {
@@ -125,9 +139,13 @@ namespace CSConfig
                 {
                     var value = (IItem)property.GetValue(descriptionMenu);
 
-                    if (property.PropertyType == typeof(Config<>))
+                    if (property.PropertyType.IsGenericType)
                     {
-                        action(value);
+                        var configType = property.PropertyType.GetGenericTypeDefinition();
+                        if (configType == typeof(Config<>))
+                        {
+                            action(value);
+                        }
                     }
                     else if (property.PropertyType == typeof(Choice))
                     {

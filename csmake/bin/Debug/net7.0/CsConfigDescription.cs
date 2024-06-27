@@ -73,6 +73,7 @@ public class STM32F103Menu : IMenu
     }
     public void ItemValueChanged(IItem cfg)
     {
+        Host.WriteLine(cfg.ToString());
         if (cfg == IntConfig)
         {
             //gInstnace.IntHexConfig.Value = IntConfig.Value;
@@ -108,7 +109,7 @@ public class MyMainMenu : IMenu
         ChipChoice = new Choice()
         {
             Items = new List<IItem>() { stm32f103menu, s32kmenu },
-            SelectedItem = s32kmenu,
+            SelectedItem = stm32f103menu,
             Help = "choice a chip",
             DisplayName = "CHOICE CHIP",
         };

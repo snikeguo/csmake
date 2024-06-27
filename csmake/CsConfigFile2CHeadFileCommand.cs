@@ -61,6 +61,10 @@ namespace csmake
                     sw.WriteLine($"#define {macroName} {val}");
                 }
             }
+            else if (vt == typeof(string))
+            {
+                sw.WriteLine($"#define {macroName} \"{val}\"");
+            }
             else
             {
                 sw.WriteLine($"#define {macroName} {val}");
@@ -68,9 +72,16 @@ namespace csmake
         }
         private void RecursiveMenuAction(IItem item)
         {
-            if (item.GetType() == typeof(Config<>))
+            var t = item.GetType();
+
+            if (t.IsGenericType)
             {
-                CodeGen_Config(item);
+                var configType = t.GetGenericTypeDefinition();
+                if (configType == typeof(Config<>))
+                {
+                    CodeGen_Config(item);
+                }
+                    
             }
             else if (item is Choice)
             {
@@ -81,7 +92,7 @@ namespace csmake
                 }
                 else
                 {
-                    CodeGen_Config(item);
+                    CodeGen_Config(c);
                 }
             }
             else if(item is IMenu menu)
@@ -99,7 +110,7 @@ namespace csmake
                 CsConfigAssembly = typeof(IItem).Assembly;
                 CSScript.RoslynEvaluator.ReferenceAssembly(CsConfigAssembly);
                 CSScript.RoslynEvaluator.ReferenceDomainAssemblies();
-                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script });
+                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName = "csmake.userscript" });
                 var  ( UserScriptDescriptionMenuInstance,UserConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
                 FileStream fs = new FileStream(OutPutFile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
                 sw=new StreamWriter(fs);
