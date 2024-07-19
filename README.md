@@ -11,7 +11,7 @@
     .\csmake.exe menuconfig -d CsConfigDescription.cs -u 33.json
     .\csmake.exe cs2head -d CsConfigDescription.cs -u 33.json -o myheader.h
 
-编写一个demo:主菜单名为demo,demo中有三个项a,b,c,其中c=a+b,c使用16进制表示
+编写一个demo:本demo比较复杂，使用了所有的功能
 ```
 using CSConfig;
 using System;
