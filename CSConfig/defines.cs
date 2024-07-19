@@ -52,6 +52,8 @@ namespace CSConfig
         public bool IsVisible { get; set; }
         [JsonIgnore]
         public bool IsReadOnly { get; set; }
+        [JsonIgnore]
+        public bool CanAddByUser { get; set; } = false;
         public override string ToString()
         {
             return DisplayName;

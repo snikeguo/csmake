@@ -1,171 +1,20 @@
 {
+  "$type": "css_root+MyMainMenu, csmake.userscript",
   "ChipChoice": {
-    "Items": [
-      {
-        "DisplayName": "STM32F103Menu",
-        "BoardNameConfig": {
-          "MacroName": "CONFIG_STM32F103_BOARD",
-          "Value": true,
-          "IsHexShow": false,
-          "Help": null,
-          "DisplayName": "BoolType",
-          "IsVisible": false,
-          "IsReadOnly": true
-        },
-        "TristateConfig": {
-          "MacroName": "CONFIG_Tristate_VALUE",
-          "Value": 1,
-          "IsHexShow": false,
-          "Help": null,
-          "DisplayName": "TristateType",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "StringConfig": {
-          "MacroName": "CONFIG_STRING_VALUE",
-          "Value": "123",
-          "IsHexShow": false,
-          "Help": null,
-          "DisplayName": "StringType",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "IntConfig": {
-          "MacroName": "CONFIG_Int_VALUE",
-          "Value": 1,
-          "IsHexShow": false,
-          "Help": null,
-          "DisplayName": "IntType",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "IntHexConfig": {
-          "MacroName": "CONFIG_IntHex_VALUE",
-          "Value": 1,
-          "IsHexShow": true,
-          "Help": null,
-          "DisplayName": "IntHexType",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "UIntConfig": {
-          "MacroName": "CONFIG_UInt_VALUE",
-          "Value": 1,
-          "IsHexShow": false,
-          "Help": null,
-          "DisplayName": "UIntType",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "UIntHexConfig": {
-          "MacroName": "CONFIG_UIntHex_VALUE",
-          "Value": 1,
-          "IsHexShow": true,
-          "Help": null,
-          "DisplayName": "UIntHexType",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "DoubleConfig": {
-          "MacroName": "CONFIG_Double_VALUE",
-          "Value": 1.3,
-          "IsHexShow": false,
-          "Help": null,
-          "DisplayName": "DoubleType",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "ChoiceConfig": {
-          "Items": [
-            {
-              "MacroName": "CONFIG_CHIP_TC397",
-              "Value": false,
-              "IsHexShow": false,
-              "Help": "英飞凌的板子 中文测试",
-              "DisplayName": "Tc397",
-              "IsVisible": false,
-              "IsReadOnly": false
-            },
-            {
-              "MacroName": "CONFIG_CHIP_S32K",
-              "Value": false,
-              "IsHexShow": false,
-              "Help": null,
-              "DisplayName": "s32k",
-              "IsVisible": false,
-              "IsReadOnly": false
-            }
-          ],
-          "SelectedItem": {
-            "MacroName": "CONFIG_CHIP_TC397",
-            "Value": false,
-            "IsHexShow": false,
-            "Help": "英飞凌的板子 中文测试",
-            "DisplayName": "Tc397",
-            "IsVisible": false,
-            "IsReadOnly": false
-          },
-          "Help": "choice help",
-          "DisplayName": "choice DisplayName",
-          "IsVisible": false,
-          "IsReadOnly": false
-        },
-        "RamMenu": null
-      },
-      {
-        "DisplayName": "S32KMenu",
-        "BoardNameConfig": {
-          "MacroName": "CONFIG_S32K_BOARD",
-          "Value": true,
-          "IsHexShow": false,
-          "Help": null,
-          "DisplayName": "BoolType",
-          "IsVisible": false,
-          "IsReadOnly": true
-        },
-        "RamMenu": {
-          "DisplayName": "RamMenu",
-          "Help": "RamMenu help",
-          "RamConfig": {
-            "MacroName": "CONFIG_RAM_ADDRESS",
-            "Value": 0,
-            "IsHexShow": true,
-            "Help": "ram start address!",
-            "DisplayName": "Ram Menu1Config",
-            "IsVisible": false,
-            "IsReadOnly": false
-          }
-        }
-      }
-    ],
+    "$type": "CSConfig.Choice, CSConfig",
     "SelectedItem": {
-      "DisplayName": "S32KMenu",
+      "$type": "css_root+S32KMenu, csmake.userscript",
       "BoardNameConfig": {
-        "MacroName": "CONFIG_S32K_BOARD",
-        "Value": true,
-        "IsHexShow": false,
-        "Help": null,
-        "DisplayName": "BoolType",
-        "IsVisible": false,
-        "IsReadOnly": true
+        "$type": "CSConfig.Config`1[[System.Boolean, System.Private.CoreLib]], CSConfig",
+        "Value": true
       },
       "RamMenu": {
-        "DisplayName": "RamMenu",
-        "Help": "RamMenu help",
+        "$type": "css_root+RamMenu, csmake.userscript",
         "RamConfig": {
-          "MacroName": "CONFIG_RAM_ADDRESS",
-          "Value": 0,
-          "IsHexShow": true,
-          "Help": "ram start address!",
-          "DisplayName": "Ram Menu1Config",
-          "IsVisible": false,
-          "IsReadOnly": false
+          "$type": "CSConfig.Config`1[[System.Int32, System.Private.CoreLib]], CSConfig",
+          "Value": 0
         }
       }
-    },
-    "Help": "choice a chip",
-    "DisplayName": "CHOICE CHIP",
-    "IsVisible": false,
-    "IsReadOnly": false
+    }
   }
 }

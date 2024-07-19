@@ -31,13 +31,13 @@ public partial class MainWindow : Window
     }
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-       KConfigRendering(App.UserScriptDescriptionMenuInstance);
+       KConfigRendering(App.MenuInstance);
     }
-    public void KConfigRendering(IMenu userScriptDescriptionMenu)
+    public void KConfigRendering(IMenu menu)
     {  
         var mainGuiMenu = new MenuNode();
         mainGuiMenu.Parent = null;
-        KConfigRenderingInternal(mainGuiMenu, userScriptDescriptionMenu);
+        KConfigRenderingInternal(mainGuiMenu, menu);
         KconfigTreeView.Items.Add(mainGuiMenu);
     }
     private void CallItemValueChanrged(object guiObj,object property)
@@ -46,16 +46,16 @@ public partial class MainWindow : Window
         menu.ItemValueChanged(property as IItem);
     }
     
-    public void KConfigRenderingInternal(MenuNode guiMenu, IMenu userMenu)
+    public void KConfigRenderingInternal(MenuNode guiMenu, IMenu menu)
     {
-        var properties = userMenu.GetType().GetProperties();
-        guiMenu.Source = userMenu;
+        var properties = menu.GetType().GetProperties();
+        guiMenu.Source = menu;
         foreach (var property in properties)
         {
             var itemAttr = property.GetCustomAttribute<ItemConfigAttribute>();
             if (itemAttr != null)
             {
-                var value = property.GetValue(userMenu);
+                var value = property.GetValue(menu);
 
                 if (property.PropertyType == typeof(Config<>))
                 {

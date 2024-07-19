@@ -5,6 +5,7 @@ using CommandLine;
 using CSConfig;
 using CSScriptLib;
 using Microsoft.CodeAnalysis;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
@@ -19,8 +20,8 @@ namespace csmake
     [Export(typeof(ICommand))]
     public class CsConfigFile2CHeadFileCommand : ICommand
     {
-        [Option('d', "UserConfigDescriptionFile", HelpText = "User Config Description file")]
-        public string UserConfigDescriptionFile { get; set; } = "UserConfigDescriptionFile.csx";
+        [Option('d', "UserConfigDescriptionFile", HelpText = "Main Menu Description File")]
+        public string MainMenuDescriptionFile { get; set; } = "MainMenuDescription.csx";
 
         [Option('u', "UserConfigFile", HelpText = "user config file")]
         public string UserConfigFile { get; set; } = "CsConfig.json";
@@ -28,9 +29,9 @@ namespace csmake
         [Option('o', "OutPutFile", HelpText = "OutPutFile")]
         public string OutPutFile { get; set; } = "config.h";
 
-        private Assembly UserScriptDescriptionAssembly;
+        private Assembly MenuAssembly;
 
-        private Assembly CsConfigAssembly;
+        private Assembly UserConfigAssembly;
         StreamWriter sw;
         private void CodeGen_Config(IItem item)
         {
@@ -64,6 +65,14 @@ namespace csmake
             else if (vt == typeof(string))
             {
                 sw.WriteLine($"#define {macroName} \"{val}\"");
+            }
+            else if (vt.IsEnum)
+            {
+                sw.WriteLine($"#define {macroName} {vt.Name}_{val}");
+            }
+            else if (vt == typeof(bool))
+            {
+                sw.WriteLine($"#define {macroName} {val.ToString().ToLower()}");
             }
             else
             {
@@ -100,43 +109,109 @@ namespace csmake
                 CSConfig.Parser.RecursiveMenu(menu, RecursiveMenuAction);
             }
         }
+        public string GetCppBaseType(Type t)
+        {
+            if(t==typeof(byte))
+            {
+                return "uint8_t";
+            }
+            else if (t == typeof(SByte))
+            {
+                return "int8_t";
+            }
+            else if (t == typeof(UInt16))
+            {
+                return "uint16_t";
+            }
+            else if (t == typeof(Int16))
+            {
+                return "int16_t";
+            }
+            else if (t == typeof(UInt32))
+            {
+                return "uint32_t";
+            }
+            else if (t == typeof(Int32))
+            {
+                return "int32_t";
+            }
+            else if (t == typeof(UInt64))
+            {
+                return "uint64_t";
+            }
+            else if (t == typeof(Int64))
+            {
+                return "int64_t";
+            }
+            throw new Exception();
+        }
         public int Execute()
         {
             try
             {
-                var content = File.ReadAllText(UserConfigDescriptionFile);
+                var content = File.ReadAllText(MainMenuDescriptionFile);
                 CSScript.EvaluatorConfig.Engine = EvaluatorEngine.Roslyn;
                 var eva = CSScript.Evaluator;
-                CsConfigAssembly = typeof(IItem).Assembly;
-                CSScript.RoslynEvaluator.ReferenceAssembly(CsConfigAssembly);
+                UserConfigAssembly = typeof(IItem).Assembly;
+                CSScript.RoslynEvaluator.ReferenceAssembly(UserConfigAssembly);
                 CSScript.RoslynEvaluator.ReferenceDomainAssemblies();
-                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName = "csmake.userscript" });
-                var  ( UserScriptDescriptionMenuInstance,UserConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
+                MenuAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName = "csmake.userscript" });
+                var  ( UserScriptDescriptionMenuInstance,UserConfig) = CSConfig.Parser.Parse(MenuAssembly,UserConfigFile);
+
+
                 FileStream fs = new FileStream(OutPutFile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
-                sw=new StreamWriter(fs);
+                sw = new StreamWriter(fs);
                 string fnWithOutExtension = Path.GetFileNameWithoutExtension(OutPutFile);
-                if(UserConfig!=null)
+                if (UserConfig != null)
                 {
                     sw.WriteLine($"#ifndef {fnWithOutExtension}_H");
                     sw.WriteLine($"#define {fnWithOutExtension}_H");
-                    
-                    sw.WriteLine();
-                    sw.WriteLine("#include \"stdbool.h\"");
 
                     sw.WriteLine();
+                    sw.WriteLine("#include \"stdbool.h\"");
+                    sw.WriteLine("#include \"stdint.h\"");
+                    sw.WriteLine();
+
+                    var menutypes= MenuAssembly.GetTypes();
+                    foreach (var type in menutypes) 
+                    { 
+                        if(type.IsEnum)
+                        {
+                            sw.WriteLine($"enum {type.Name}");
+                            sw.WriteLine("{");
+                            var vs=type.GetEnumValues();
+                            foreach (var evItem in vs)
+                            {
+                                sw.WriteLine($"    {type.Name}_{evItem},");
+                            }
+                            sw.WriteLine("};");
+                        }
+                        if(!type.IsPrimitive && !type.IsEnum && type.IsValueType)
+                        {
+                            sw.WriteLine($"struct {type.Name}");
+                            sw.WriteLine("{");
+                            var fields=type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance);
+                            foreach (var f in fields)
+                            {
+                                sw.WriteLine($"    {GetCppBaseType(f.FieldType)}  {f.Name};");
+                            }
+                            sw.WriteLine("};");
+                        }
+                    }
+
                     //todo codegen user define struct 
                     //todo codegen user define enum
 
                     sw.WriteLine();
                     sw.WriteLine("//User Config:");
-                    CSConfig.Parser.RecursiveMenu(UserScriptDescriptionMenuInstance,RecursiveMenuAction);
+                    CSConfig.Parser.RecursiveMenu(UserScriptDescriptionMenuInstance, RecursiveMenuAction);
                     sw.WriteLine();
                     sw.WriteLine($"#endif //{fnWithOutExtension}_H");
                     sw.Flush();
                     sw.Close();
                     fs.Close();
                 }
-                
+
                 return 0;
             }
             catch (Exception ex)

@@ -23,15 +23,15 @@ namespace csmake
     [Export(typeof(ICommand))]
     public class MenuConfigCommand : ICommand
     {
-        [Option('d', "UserConfigDescriptionFile", HelpText = "User Config Description file")]
-        public string UserConfigDescriptionFile { get; set; } = "UserConfigDescriptionFile.csx";
+        [Option('d', "MainMenuDescriptionFile", HelpText = "Main Menu Description File")]
+        public string MainMenuDescriptionFile { get; set; } = "MainMenuDescription.csx";
 
         [Option('u', "UserConfigFile", HelpText = "user config file")]
         public string UserConfigFile { get; set; } = "CsConfig.json";
 
-        private Assembly UserScriptDescriptionAssembly;
+        private Assembly MenuAssembly;
 
-        private Assembly CsConfigAssembly;
+        private Assembly UserConfigAssembly;
 
         
         public int Execute()
@@ -40,26 +40,36 @@ namespace csmake
             {
 
                 // -u choice_stm32.json
-
-                var content = File.ReadAllText(UserConfigDescriptionFile);
+                Stopwatch sw = Stopwatch.StartNew();
+                var content = File.ReadAllText(MainMenuDescriptionFile);
                 CSScript.EvaluatorConfig.Engine = EvaluatorEngine.Roslyn;
                 var eva = CSScript.Evaluator;
-                CsConfigAssembly = typeof(IItem).Assembly;
-                CSScript.RoslynEvaluator.ReferenceAssembly(CsConfigAssembly);
+                UserConfigAssembly = typeof(IItem).Assembly;
+                CSScript.RoslynEvaluator.ReferenceAssembly(UserConfigAssembly);
                 CSScript.RoslynEvaluator.ReferenceDomainAssemblies();
-                UserScriptDescriptionAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName="csmake.userscript"});
+                
+                Console.WriteLine($"compiling {MainMenuDescriptionFile}.");
+                
+                MenuAssembly = CSScript.RoslynEvaluator.CompileCode(content, new CompileInfo { CodeKind = SourceCodeKind.Script, AssemblyName="csmake.userscript"});
+                
                 IMenu userConfig = null;
-                (App.UserScriptDescriptionMenuInstance,userConfig) = CSConfig.Parser.Parse(UserScriptDescriptionAssembly,UserConfigFile);
-                if(true)
+                
+                (App.MenuInstance,userConfig) = CSConfig.Parser.Parse(MenuAssembly,UserConfigFile);
+
+                sw.Stop();
+                Console.WriteLine($"Parse time span:{sw.Elapsed}");
+
+                if (false)
                 {
                     var settings = new JsonSerializerSettings
                     {
                         TypeNameHandling = TypeNameHandling.Objects // 必须与序列化时一致  
                     };
 
-                    var str=JsonConvert.SerializeObject(App.UserScriptDescriptionMenuInstance,Newtonsoft.Json.Formatting.Indented, settings);
+                    var str=JsonConvert.SerializeObject(App.MenuInstance,Newtonsoft.Json.Formatting.Indented, settings);
                     File.WriteAllText("choice_stm32.json", str);
                 }
+
                 var appBuilder = AppBuilder.Configure<App>()
                .UsePlatformDetect()
                .WithInterFont()
